@@ -40,8 +40,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:layout_marginLeft="150dp"
             android:text="@string/wifiStatus"
             />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:id="@+id/progress"
+            android:layout_marginLeft="120dp"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

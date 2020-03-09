@@ -1,5 +1,8 @@
 package com.moac;
 
+import android.os.Handler;
+import android.os.Message;
+
 import org.apache.commons.net.telnet.TelnetClient;
 
 import java.io.BufferedReader;
@@ -10,8 +13,11 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
+import java.util.regex.Pattern;
 
 public class TelnetUtil {
 
@@ -24,7 +30,12 @@ public class TelnetUtil {
     private String prompt;
     private InputStream in;
     private PrintStream out;
+    private Handler handler;
+    private Message message=new Message();
+    private ByteArrayInputStream bi;
+    private InputStreamReader is;
     private List<String> ipList=new ArrayList<>();
+    Map<String,String> map=new HashMap<String, String>();
 
     public TelnetUtil(String host, String prompt,int room) {
         this.host = host;
@@ -33,15 +44,26 @@ public class TelnetUtil {
         telnetClient=new TelnetClient();
     }
 
-    public void connectToSwitch(){
+    public void setHandler(Handler handler) {
+        this.handler = handler;
+    }
+
+    public boolean connectToSwitch(){
+        boolean connFlag=false;
         try {
             telnetClient.connect(host,port);
             in=telnetClient.getInputStream();
             out=new PrintStream(telnetClient.getOutputStream());
             login();
+            connFlag=true;
         } catch (IOException e) {
             e.printStackTrace();
+            message.what=1;              //连接错误
+            handler.sendMessage(message);
+
         }
+
+        return connFlag;
     }
 
     private void login(){
@@ -63,15 +85,14 @@ public class TelnetUtil {
 
     }
 
-    private String exeCuteCommand(String command){
-
+    private void exeCuteCommand(String command){
         write(command);
-        return null;
+        //return null;
     }
 
-    public List<String> get(){
+    public Map<String,String> get(){
         getIPConfig();
-        return this.ipList;
+        return this.map;
     }
 
     private void getIPConfig(){
@@ -80,7 +101,7 @@ public class TelnetUtil {
         for(int i=1;i<=52;i++)
         {
 
-            exeCuteCommand(cmd+String.valueOf(i));
+            exeCuteCommand(cmd+i);
             resultStr=readUntil("return",3);
             if(resultStr.endsWith(" shutdown"))
                 break;
@@ -95,19 +116,24 @@ public class TelnetUtil {
 
         String startTag=" description";
         String[]tags;
-        String[] subTags;
+        String[] subTags = new String[0];
         String[]ips;
+        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
 
         try {
-            ByteArrayInputStream bi=new ByteArrayInputStream(config.getBytes("ascii"));
-            InputStreamReader is=new InputStreamReader(bi);
+            bi=new ByteArrayInputStream(config.getBytes("ascii"));
+            is=new InputStreamReader(bi);
             BufferedReader br=new BufferedReader(is);
             String line;
             while ((line=br.readLine())!=null){
                 if(line.contains(startTag)){
                     tags=line.trim().split(" ");
                     subTags=tags[1].split("-");
-                    if(room!=Integer.parseInt(subTags[1])){
+                    if(subTags.length>=2){
+                        if(!(pattern.matcher(subTags[1]).matches()) || (room!=Integer.parseInt(subTags[1]))){
+                            break;
+                        }
+                    }else {
                         break;
                     }
 
@@ -115,7 +141,7 @@ public class TelnetUtil {
 
                 if(line.contains("user-bind")){
                     ips=line.trim().split(" ");
-                    ipList.add(ips[2]);
+                    map.put(ips[2],subTags[0]);
                 }
             }
         } catch (UnsupportedEncodingException e) {
@@ -150,8 +176,12 @@ public class TelnetUtil {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            message.what=3;                //读取返回结果错误
+            handler.sendMessage(message);
         } catch (TimeoutException e) {
             e.printStackTrace();
+            message.what=4;               //读取超时
+            handler.sendMessage(message);
         }
 
         return null;
@@ -162,6 +192,9 @@ public class TelnetUtil {
             telnetClient.disconnect();
         } catch (IOException e) {
             e.printStackTrace();
+            message.what=2;      //关闭连接错误
+            handler.sendMessage(message);
+
         }
     }
 
