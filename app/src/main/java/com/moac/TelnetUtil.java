@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.os.Message;
 
 import org.apache.commons.net.telnet.TelnetClient;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -13,9 +12,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Pattern;
 
@@ -34,8 +31,7 @@ public class TelnetUtil {
     private Message message=new Message();
     private ByteArrayInputStream bi;
     private InputStreamReader is;
-    private List<String> ipList=new ArrayList<>();
-    Map<String,String> map=new HashMap<String, String>();
+    private List<IpInfo> list=new ArrayList<>();
 
     public TelnetUtil(String host, String prompt,int room) {
         this.host = host;
@@ -87,12 +83,11 @@ public class TelnetUtil {
 
     private void exeCuteCommand(String command){
         write(command);
-        //return null;
     }
 
-    public Map<String,String> get(){
+    public List<IpInfo> get(){
         getIPConfig();
-        return this.map;
+        return this.list;
     }
 
     private void getIPConfig(){
@@ -141,7 +136,9 @@ public class TelnetUtil {
 
                 if(line.contains("user-bind")){
                     ips=line.trim().split(" ");
-                    map.put(ips[2],subTags[0]);
+                    //map.put(ips[2],subTags[0]);
+                    IpInfo info=new IpInfo(subTags[0],ips[2]);
+                    list.add(info);
                 }
             }
         } catch (UnsupportedEncodingException e) {
@@ -165,7 +162,7 @@ public class TelnetUtil {
                 sb.append((char)len);
                 result=sb.toString();
                 if(result.endsWith(pattern) || result.endsWith(" shutdown")) {
-                    return sb.toString();
+                    return result;
                 }
 
                 currentTime=System.currentTimeMillis();

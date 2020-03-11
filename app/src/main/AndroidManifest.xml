@@ -17,9 +17,23 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ResultActivity"></activity>
+
+        <receiver android:name=".WlanReceiver">
+            <intent-filter>
+                <action android:name="android.net.wifi.RSSI_CHANGED"/>
+                <action android:name="android.net.wifi.STATE_CHANGE"/>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    
 
 
 </manifest>

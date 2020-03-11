@@ -3,4 +3,7 @@
     <string name="type">请输入办公室号</string>
     <string name="search">查询</string>
     <string name="wifiStatus">当前未连接到WLAN</string>
+    <string name="result">查找结果</string>
+    <string name="no_result">没有结果</string>
+
 </resources>
