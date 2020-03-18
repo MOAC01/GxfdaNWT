@@ -15,12 +15,9 @@ public class WlanReceiver extends BroadcastReceiver {
 
     private static final String TAG = "wifiReceiver";
     private Handler handler;
-
-
     public void setHandler(Handler handler) {
         this.handler = handler;
     }
-
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -59,9 +56,6 @@ public class WlanReceiver extends BroadcastReceiver {
             }
         }
 
-
-
     }
-
 
 }

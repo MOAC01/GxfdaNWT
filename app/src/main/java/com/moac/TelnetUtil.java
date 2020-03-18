@@ -78,7 +78,6 @@ public class TelnetUtil {
     private void write(String value) {
         out.println(value);
         out.flush();
-
     }
 
     private void exeCuteCommand(String command){
