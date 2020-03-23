@@ -18,23 +18,26 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:id="@+id/input_text"
-            android:inputType="number"
             android:hint="@string/type"/>
 
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:textColor="@color/white"
+            android:elevation="16dp"
+            android:theme="@style/CustomButton"
             android:text="@string/search"
             android:id="@+id/btn_search"/>
 
-        <TextView
+        <!--<TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:id="@+id/wifi_state"
             android:layout_gravity="center"
-            />
+            />-->
 
 
     </LinearLayout>

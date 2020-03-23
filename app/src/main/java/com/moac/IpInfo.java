@@ -6,6 +6,9 @@ public class IpInfo implements Serializable {
     private String wall;
     private String ipAddr;
 
+    public IpInfo() {
+    }
+
     public IpInfo(String wall, String ipAddr) {
         this.wall = wall;
         this.ipAddr = ipAddr;

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">GxfdaNWT</string>
-    <string name="type">请输入办公室号</string>
+    <string name="type">请输入面板号 例如10FW06</string>
     <string name="search">查询</string>
     <string name="wifiStatus">当前未连接到WLAN</string>
     <string name="result">查找结果</string>

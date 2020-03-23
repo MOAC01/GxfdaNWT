@@ -20,6 +20,10 @@ public class ExampleUnitTest {
     @Test
     public void add(){
         //Log.d("Test",String.valueOf(1+2));
-        System.out.println("hello");
     }
+
+
+
+
+
 }

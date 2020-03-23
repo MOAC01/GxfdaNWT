@@ -8,4 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="CustomButton" parent="Theme.AppCompat.Light">
+        <!-- 点击高亮时背景颜色 -->
+
+        <!-- 按钮正常背景颜色 -->
+        <item name="colorButtonNormal">@color/colorAccent</item>
+    </style>
+
 </resources>
